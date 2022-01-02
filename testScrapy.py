@@ -8,7 +8,7 @@ import re
 import wget
 
 
-url = ""
+url = "http://localhost:80/"
 # a queue of urls to be crawled
 new_urls = deque([url])
 
@@ -23,13 +23,14 @@ foreign_urls = set()
 # a set of broken urls
 broken_urls = set()
 
+
 # process urls one by one until we exhaust the queue
 while len(new_urls):
     # move next url from the queue to the set of processed urls
     url = new_urls.popleft()
     processed_urls.add(url)
     # get url's content
-    #print("Processing %s" % url)
+    print("Processing %s" % url)
     listUrls.append(url)
     try:
         response = requests.get(url)
@@ -51,6 +52,7 @@ while len(new_urls):
     for link in soup.find_all('a'):
         # extract link url from the anchor
         anchor = link.attrs["href"] if "href" in link.attrs else ''
+        print(anchor)
 
         if anchor.startswith('/'):
             local_link = base_url + anchor
@@ -73,9 +75,10 @@ for i in range (len(listUrls)):
     if i == 0:
         i+=1
     else:
-        if listUrls[i][len(listUrls[i])-1] != "/":
+        if listUrls[i][len(listUrls[i])-1] == "/":
             print("folder ",listUrls[i])
         else:
+            print("done")
             res = requests.get(listUrls[i])
             wget.download(listUrls[i])
 
